@@ -193,6 +193,7 @@ class Marker {
                 _onAppleAnnotationDragEnd(latLng, marker.onDragEnd)
             : null,
         position: marker.position.appleLatLng,
+        rotation: marker.rotation,
       );
 
   static googleMaps.Marker googleMapsMarkerFromMarker(Marker marker) =>
@@ -210,6 +211,7 @@ class Marker {
                 _onGoogleMarkerDragEnd(latLng, marker.onDragEnd)
             : null,
         position: marker.position.googleLatLng,
+        rotation: marker.rotation,
       );
 
   static Set<appleMaps.Annotation> toAppleMapsAnnotationSet(
