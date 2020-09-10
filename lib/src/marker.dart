@@ -110,6 +110,7 @@ class Marker {
     this.onTap,
     this.visible = true,
     this.onDragEnd,
+    this.rotation = 0.0,
   }) : assert((0.0 <= alpha && alpha <= 1.0));
 
   /// Uniquely identifies a [Marker].
@@ -154,6 +155,9 @@ class Marker {
 
   final ValueChanged<LatLng>? onDragEnd;
 
+  /// Rotation of the marker image in degrees clockwise from the [anchor] point.
+  final double rotation;
+
   appleMaps.Annotation get appleMapsAnnotation => appleMaps.Annotation(
         annotationId: this.markerId.appleMapsAnnoationId,
         alpha: this.alpha,
@@ -169,6 +173,7 @@ class Marker {
                 _onAppleAnnotationDragEnd(latLng, this.onDragEnd)
             : null,
         position: this.position.appleLatLng,
+        rotation: this.rotation,
       );
 
   googleMaps.Marker get googleMapsMarker => googleMaps.Marker(
@@ -186,6 +191,7 @@ class Marker {
                 _onGoogleMarkerDragEnd(latLng, this.onDragEnd)
             : null,
         position: this.position.googleLatLng,
+        rotation: this.rotation,
       );
 
   static appleMaps.Annotation appleMapsAnnotationFromMarker(Marker marker) =>
