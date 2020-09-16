@@ -104,6 +104,8 @@ class Marker {
     this.visible = true,
     this.onDragEnd,
     this.rotation = 0.0,
+    this.zPosition = 0.0,
+    this.anchor,
   }) : assert(alpha == null || (0.0 <= alpha && alpha <= 1.0));
 
   /// Uniquely identifies a [Marker].
@@ -144,6 +146,14 @@ class Marker {
   /// Rotation of the marker image in degrees clockwise from the [anchor] point.
   final double rotation;
 
+  /// zPosition of the marker
+  final double zPosition;
+
+  /// marker relative point for position
+  /// [anchor] is (0.5, 1.0) bottom center by default on Google Maps
+  /// [anchor] is (0.5, 0.5) bottom center by default on Apple Maps
+  final Offset anchor;
+
   appleMaps.Annotation get appleMapsAnnotation => appleMaps.Annotation(
         annotationId: this.markerId.appleMapsAnnoationId,
         alpha: this.alpha,
@@ -159,6 +169,8 @@ class Marker {
             : null,
         position: this.position.appleLatLng,
         rotation: this.rotation,
+        zPosition: this.zPosition,
+        anchor: this.anchor,
       );
 
   googleMaps.Marker get googleMapsMarker => googleMaps.Marker(
@@ -176,6 +188,8 @@ class Marker {
             : null,
         position: this.position.googleLatLng,
         rotation: this.rotation,
+        zIndex: this.zPosition,
+        anchor: this.anchor,
       );
 
   static appleMaps.Annotation appleMapsAnnotationFromMarker(Marker marker) =>
@@ -194,6 +208,8 @@ class Marker {
             : null,
         position: marker.position.appleLatLng,
         rotation: marker.rotation,
+        zPosition: marker.zPosition,
+        anchor: marker.anchor,
       );
 
   static googleMaps.Marker googleMapsMarkerFromMarker(Marker marker) =>
@@ -212,6 +228,8 @@ class Marker {
             : null,
         position: marker.position.googleLatLng,
         rotation: marker.rotation,
+        zIndex: marker.zPosition,
+        anchor: marker.anchor,
       );
 
   static Set<appleMaps.Annotation> toAppleMapsAnnotationSet(
