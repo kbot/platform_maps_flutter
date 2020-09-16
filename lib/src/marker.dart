@@ -111,6 +111,7 @@ class Marker {
     this.visible = true,
     this.onDragEnd,
     this.rotation = 0.0,
+    this.zPosition = 0.0,
   }) : assert((0.0 <= alpha && alpha <= 1.0));
 
   /// Uniquely identifies a [Marker].
@@ -126,6 +127,8 @@ class Marker {
   /// The image point is specified in normalized coordinates: An anchor of
   /// (0.0, 0.0) means the top left corner of the image. An anchor
   /// of (1.0, 1.0) means the bottom right corner of the image.
+  /// [anchor] is (0.5, 1.0) bottom center by default on Google Maps
+  /// [anchor] is (0.5, 0.5) bottom center by default on Apple Maps
   final Offset anchor;
 
   /// True if the marker icon consumes tap events. If not, the map will perform
@@ -158,6 +161,9 @@ class Marker {
   /// Rotation of the marker image in degrees clockwise from the [anchor] point.
   final double rotation;
 
+  /// zPosition of the marker
+  final double zPosition;
+
   appleMaps.Annotation get appleMapsAnnotation => appleMaps.Annotation(
         annotationId: this.markerId.appleMapsAnnoationId,
         alpha: this.alpha,
@@ -174,6 +180,7 @@ class Marker {
             : null,
         position: this.position.appleLatLng,
         rotation: this.rotation,
+        zPosition: this.zPosition,
       );
 
   googleMaps.Marker get googleMapsMarker => googleMaps.Marker(
@@ -192,6 +199,7 @@ class Marker {
             : null,
         position: this.position.googleLatLng,
         rotation: this.rotation,
+        zIndex: this.zPosition,
       );
 
   static appleMaps.Annotation appleMapsAnnotationFromMarker(Marker marker) =>
@@ -211,6 +219,7 @@ class Marker {
             : null,
         position: marker.position.appleLatLng,
         rotation: marker.rotation,
+        zPosition: marker.zPosition,
       );
 
   static googleMaps.Marker googleMapsMarkerFromMarker(Marker marker) =>
@@ -230,6 +239,7 @@ class Marker {
             : null,
         position: marker.position.googleLatLng,
         rotation: marker.rotation,
+        zIndex: marker.zPosition,
       );
 
   static Set<appleMaps.Annotation> toAppleMapsAnnotationSet(
