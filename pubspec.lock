@@ -5,11 +5,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: bbe15148d59de5334b616c13c8c80ceda5a7905d
+      ref: "0.1.2+4"
+      resolved-ref: "56fb4445b760956f16b59436076059d57ab13959"
       url: "https://github.com/kbot/apple_maps_flutter"
     source: git
-    version: "0.1.1+2"
+    version: "0.1.2+4"
   async:
     dependency: transitive
     description:

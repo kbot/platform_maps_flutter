@@ -1,6 +1,6 @@
 name: platform_maps_flutter
 description: A Flutter package that combines google_maps and apple_maps to provide a crossplatform native map implementation.
-version: 0.1.8+1
+version: 0.1.9+2
 homepage: https://github.com/LuisThein
 repository: https://github.com/LuisThein/platform_maps_flutter
 issue_tracker: https://github.com/LuisThein/platform_maps_flutter/issues
@@ -17,6 +17,7 @@ dependencies:
   apple_maps_flutter:
     git:
       url: https://github.com/kbot/apple_maps_flutter
+      ref: 0.1.2+4
 
 
 dev_dependencies:
