@@ -2,11 +2,7 @@ part of platform_maps_flutter;
 
 /// Text labels for a [Marker] info window.
 class InfoWindow {
-  const InfoWindow({
-    this.title,
-    this.snippet,
-    this.onTap,
-  });
+  const InfoWindow({this.title, this.snippet, this.onTap, this.anchor});
 
   /// Text labels specifying that no text is to be displayed.
   static const InfoWindow noText = InfoWindow();
@@ -14,25 +10,33 @@ class InfoWindow {
   /// Text displayed in an info window when the user taps the marker.
   ///
   /// A null value means no title.
-  final String title;
+  final String? title;
 
   /// Additional text displayed below the [title].
   ///
   /// A null value means no additional text.
-  final String snippet;
+  final String? snippet;
+
+  /// The icon image point that will be the anchor of the info window when
+  /// displayed.
+  ///
+  /// The image point is specified in normalized coordinates: An anchor of
+  /// (0.0, 0.0) means the top left corner of the image. An anchor
+  /// of (1.0, 1.0) means the bottom right corner of the image.
+  final Offset? anchor;
 
   /// onTap callback for this [InfoWindow].
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   appleMaps.InfoWindow get appleMapsInfoWindow => appleMaps.InfoWindow(
-        anchor: Offset(0, 0),
+        anchor: this.anchor ?? Offset(0, 0),
         onTap: this.onTap,
         snippet: this.snippet,
         title: this.title,
       );
 
   googleMaps.InfoWindow get googleMapsInfoWindow => googleMaps.InfoWindow(
-        anchor: Offset(0, 0),
+        anchor: this.anchor ?? Offset(0, 0),
         onTap: this.onTap,
         snippet: this.snippet,
         title: this.title,
@@ -41,24 +45,26 @@ class InfoWindow {
   /// Creates a new [InfoWindow] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
   InfoWindow copyWith({
-    String titleParam,
-    String snippetParam,
-    VoidCallback onTapParam,
+    String? titleParam,
+    String? snippetParam,
+    Offset? anchorParam,
+    VoidCallback? onTapParam,
   }) {
     return InfoWindow(
       title: titleParam ?? title,
       snippet: snippetParam ?? snippet,
+      anchor: anchorParam ?? anchor,
       onTap: onTapParam ?? onTap,
     );
   }
 }
 
-/// Uniquely identifies a [Marker] among [GoogleMap] markers.
+/// Uniquely identifies a [Marker] among [PlatformMaps] markers.
 ///
 /// This does not have to be globally unique, only unique among the list.
 @immutable
 class MarkerId {
-  MarkerId(this.value) : assert(value != null);
+  MarkerId(this.value);
 
   /// value of the [MarkerId].
   final String value;
@@ -93,7 +99,7 @@ class Marker {
   /// * is visible; [visible] is true
   /// * is placed at the base of the drawing order; [zIndex] is 0.0
   const Marker({
-    @required this.markerId,
+    required this.markerId,
     this.alpha = 1.0,
     this.consumeTapEvents = false,
     this.draggable = false,
@@ -103,7 +109,7 @@ class Marker {
     this.onTap,
     this.visible = true,
     this.onDragEnd,
-  }) : assert(alpha == null || (0.0 <= alpha && alpha <= 1.0));
+  }) : assert((0.0 <= alpha && alpha <= 1.0));
 
   /// Uniquely identifies a [Marker].
   final MarkerId markerId;
@@ -122,7 +128,7 @@ class Marker {
   final bool draggable;
 
   /// A description of the bitmap used to draw the marker icon.
-  final BitmapDescriptor icon;
+  final BitmapDescriptor? icon;
 
   /// A Google Maps InfoWindow.
   ///
@@ -133,12 +139,12 @@ class Marker {
   final LatLng position;
 
   /// Callbacks to receive tap events for markers placed on this map.
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   /// True if the annotation is visible.
   final bool visible;
 
-  final ValueChanged<LatLng> onDragEnd;
+  final ValueChanged<LatLng>? onDragEnd;
 
   appleMaps.Annotation get appleMapsAnnotation => appleMaps.Annotation(
         annotationId: this.markerId.appleMapsAnnoationId,
@@ -146,8 +152,8 @@ class Marker {
         draggable: this.draggable,
         infoWindow: this.infoWindow.appleMapsInfoWindow,
         onTap: this.onTap,
-        icon: this.icon.bitmapDescriptor ??
-            BitmapDescriptor.defaultMarker.bitmapDescriptor,
+        icon: this.icon?.bitmapDescriptor ??
+            BitmapDescriptor.defaultMarker?.bitmapDescriptor,
         visible: this.visible,
         onDragEnd: this.onDragEnd != null
             ? (appleMaps.LatLng latLng) =>
@@ -162,8 +168,8 @@ class Marker {
         draggable: this.draggable,
         infoWindow: this.infoWindow.googleMapsInfoWindow,
         onTap: this.onTap,
-        icon: this.icon.bitmapDescriptor ??
-            BitmapDescriptor.defaultMarker.bitmapDescriptor,
+        icon: this.icon?.bitmapDescriptor ??
+            BitmapDescriptor.defaultMarker?.bitmapDescriptor,
         visible: this.visible,
         onDragEnd: this.onDragEnd != null
             ? (googleMaps.LatLng latLng) =>
@@ -176,11 +182,12 @@ class Marker {
       appleMaps.Annotation(
         annotationId: marker.markerId.appleMapsAnnoationId,
         alpha: marker.alpha,
+        anchor: Offset(0.5, 1.0),
         draggable: marker.draggable,
         infoWindow: marker.infoWindow.appleMapsInfoWindow,
         onTap: marker.onTap,
         icon: marker.icon?.bitmapDescriptor ??
-            BitmapDescriptor.defaultMarker.bitmapDescriptor,
+            BitmapDescriptor.defaultMarker?.bitmapDescriptor,
         visible: marker.visible,
         onDragEnd: marker.onDragEnd != null
             ? (appleMaps.LatLng latLng) =>
@@ -193,11 +200,12 @@ class Marker {
       googleMaps.Marker(
         markerId: marker.markerId.googleMapsMarkerId,
         alpha: marker.alpha,
+        anchor: Offset(0.5, 1.0),
         draggable: marker.draggable,
         infoWindow: marker.infoWindow.googleMapsInfoWindow,
         onTap: marker.onTap,
         icon: marker.icon?.bitmapDescriptor ??
-            BitmapDescriptor.defaultMarker.bitmapDescriptor,
+            BitmapDescriptor.defaultMarker?.bitmapDescriptor,
         visible: marker.visible,
         onDragEnd: marker.onDragEnd != null
             ? (googleMaps.LatLng latLng) =>
@@ -208,7 +216,7 @@ class Marker {
 
   static Set<appleMaps.Annotation> toAppleMapsAnnotationSet(
       Set<Marker> markers) {
-    List<appleMaps.Annotation> _annotations = List<appleMaps.Annotation>();
+    List<appleMaps.Annotation> _annotations = <appleMaps.Annotation>[];
     for (Marker marker in markers) {
       _annotations.add(appleMapsAnnotationFromMarker(marker));
     }
@@ -216,7 +224,7 @@ class Marker {
   }
 
   static Set<googleMaps.Marker> toGoogleMapsMarkerSet(Set<Marker> markers) {
-    List<googleMaps.Marker> _markers = List<googleMaps.Marker>();
+    List<googleMaps.Marker> _markers = <googleMaps.Marker>[];
     for (Marker marker in markers) {
       _markers.add(googleMapsMarkerFromMarker(marker));
     }
@@ -224,14 +232,14 @@ class Marker {
   }
 
   Marker copyWith({
-    double alphaParam,
-    bool consumeTapEventsParam,
-    bool draggableParam,
-    BitmapDescriptor iconParam,
-    InfoWindow infoWindowParam,
-    LatLng positionParam,
-    bool visibleParam,
-    VoidCallback onTapParam,
+    double? alphaParam,
+    bool? consumeTapEventsParam,
+    bool? draggableParam,
+    BitmapDescriptor? iconParam,
+    InfoWindow? infoWindowParam,
+    LatLng? positionParam,
+    bool? visibleParam,
+    VoidCallback? onTapParam,
   }) {
     return Marker(
       markerId: markerId,
@@ -246,16 +254,12 @@ class Marker {
     );
   }
 
-  static _onGoogleMarkerDragEnd(googleMaps.LatLng latLng, Function onDragEnd) {
-    if (onDragEnd != null) {
-      onDragEnd(LatLng._fromGoogleLatLng(latLng));
-    }
+  static _onGoogleMarkerDragEnd(googleMaps.LatLng latLng, Function? onDragEnd) {
+    onDragEnd?.call(LatLng._fromGoogleLatLng(latLng));
   }
 
   static _onAppleAnnotationDragEnd(
-      appleMaps.LatLng latLng, Function onDragEnd) {
-    if (onDragEnd != null) {
-      onDragEnd(LatLng._fromAppleLatLng(latLng));
-    }
+      appleMaps.LatLng latLng, Function? onDragEnd) {
+    onDragEnd?.call(LatLng._fromAppleLatLng(latLng));
   }
 }

@@ -2,8 +2,18 @@
 part of platform_maps_flutter;
 
 enum Cap {
+  /// Cap that is squared off exactly at the start or end vertex of a [Polyline] with solid stroke pattern,
+  ///  equivalent to having no additional cap beyond the start or end vertex.
+  ///
+  /// This is the default cap type at start and end vertices of Polylines with solid stroke pattern.
   buttCap,
+
+  /// Cap that is a semicircle with radius equal to half the stroke width, centered at
+  /// the start or end vertex of a [Polyline] with solid stroke pattern.
   roundCap,
+
+  /// Cap that is squared off after extending half the stroke width beyond the start
+  /// or end vertex of a [Polyline] with solid stroke pattern.
   squareCap,
 }
 
@@ -23,10 +33,10 @@ class _Cap {
   };
 
   static googleMaps.Cap googlePolylineCap(Cap cap) {
-    return googleMapsCaps[cap];
+    return googleMapsCaps[cap]!;
   }
 
   static appleMaps.Cap applePolylineCap(Cap cap) {
-    return appleMapsCaps[cap];
+    return appleMapsCaps[cap]!;
   }
 }
