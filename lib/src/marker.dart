@@ -109,6 +109,9 @@ class Marker {
     this.onTap,
     this.visible = true,
     this.onDragEnd,
+    this.rotation = 0.0,
+    this.zPosition = 0.0,
+    this.anchor,
   }) : assert((0.0 <= alpha && alpha <= 1.0));
 
   /// Uniquely identifies a [Marker].
@@ -146,6 +149,17 @@ class Marker {
 
   final ValueChanged<LatLng>? onDragEnd;
 
+  /// Rotation of the marker image in degrees clockwise from the [anchor] point.
+  final double rotation;
+
+  /// zPosition of the marker
+  final double zPosition;
+
+  /// marker relative point for position
+  /// [anchor] is (0.5, 1.0) bottom center by default on Google Maps
+  /// [anchor] is (0.5, 0.5) bottom center by default on Apple Maps
+  final Offset? anchor;
+
   appleMaps.Annotation get appleMapsAnnotation => appleMaps.Annotation(
         annotationId: this.markerId.appleMapsAnnoationId,
         alpha: this.alpha,
@@ -160,6 +174,9 @@ class Marker {
                 _onAppleAnnotationDragEnd(latLng, this.onDragEnd)
             : null,
         position: this.position.appleLatLng,
+        rotation: this.rotation,
+        zPosition: this.zPosition,
+        anchor: this.anchor ?? Offset(0.5, 0.5),
       );
 
   googleMaps.Marker get googleMapsMarker => googleMaps.Marker(
@@ -176,13 +193,16 @@ class Marker {
                 _onGoogleMarkerDragEnd(latLng, this.onDragEnd)
             : null,
         position: this.position.googleLatLng,
+        rotation: this.rotation,
+        zIndex: this.zPosition,
+        anchor: this.anchor ?? Offset(0.5, 1.0),
       );
 
   static appleMaps.Annotation appleMapsAnnotationFromMarker(Marker marker) =>
       appleMaps.Annotation(
         annotationId: marker.markerId.appleMapsAnnoationId,
         alpha: marker.alpha,
-        anchor: Offset(0.5, 1.0),
+        anchor: marker.anchor ?? Offset(0.5, 0.5),
         draggable: marker.draggable,
         infoWindow: marker.infoWindow.appleMapsInfoWindow,
         onTap: marker.onTap,
@@ -194,13 +214,15 @@ class Marker {
                 _onAppleAnnotationDragEnd(latLng, marker.onDragEnd)
             : null,
         position: marker.position.appleLatLng,
+        rotation: marker.rotation,
+        zPosition: marker.zPosition,
       );
 
   static googleMaps.Marker googleMapsMarkerFromMarker(Marker marker) =>
       googleMaps.Marker(
         markerId: marker.markerId.googleMapsMarkerId,
         alpha: marker.alpha,
-        anchor: Offset(0.5, 1.0),
+        anchor: marker.anchor ?? Offset(0.5, 1.0),
         draggable: marker.draggable,
         infoWindow: marker.infoWindow.googleMapsInfoWindow,
         onTap: marker.onTap,
@@ -212,6 +234,8 @@ class Marker {
                 _onGoogleMarkerDragEnd(latLng, marker.onDragEnd)
             : null,
         position: marker.position.googleLatLng,
+        rotation: marker.rotation,
+        zIndex: marker.zPosition,
       );
 
   static Set<appleMaps.Annotation> toAppleMapsAnnotationSet(
@@ -240,6 +264,7 @@ class Marker {
     LatLng? positionParam,
     bool? visibleParam,
     VoidCallback? onTapParam,
+    double? rotationParam,
   }) {
     return Marker(
       markerId: markerId,
@@ -251,6 +276,7 @@ class Marker {
       position: positionParam ?? position,
       visible: visibleParam ?? visible,
       onTap: onTapParam ?? onTap,
+      rotation: rotationParam ?? rotation,
     );
   }
 
