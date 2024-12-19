@@ -180,7 +180,7 @@ class Marker {
             : null,
         position: this.position.appleLatLng,
         rotation: this.rotation,
-        zPosition: this.zPosition,
+        zIndex: this.zPosition
       );
 
   googleMaps.Marker get googleMapsMarker => googleMaps.Marker(
@@ -219,7 +219,7 @@ class Marker {
             : null,
         position: marker.position.appleLatLng,
         rotation: marker.rotation,
-        zPosition: marker.zPosition,
+        zIndex: marker.zPosition,
       );
 
   static googleMaps.Marker googleMapsMarkerFromMarker(Marker marker) =>
